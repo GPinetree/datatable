@@ -63,35 +63,59 @@ public class DataTable {
 			return false;
 		}
 		return true;
-	}
-
-	public DataTableRow getRow(int i) {
-		return rows.get(i);
-	}
-
-	public String export(int format) {
-		DataTableRow row;
-		String output = "";
-		if (format == DataTable.FORMAT_CSV) {
-			for (String collumnName : columnsTypes.keySet()) {
-				output += collumnName + ";";
-			}
-			output += "\n";
-			for (int i = 0; i < this.rowsCount(); i++) {
-				row = this.getRow(i);
+		}
+	
+		public DataTableRow getRow(int i) {
+			return rows.get(i);
+		}
+	
+		public String export(int format) {
+			DataTableRow row;
+			String output = "";
+			if (format == DataTable.FORMAT_CSV) {
 				for (String collumnName : columnsTypes.keySet()) {
-					if (columnsTypes.get(collumnName) == DataTable.TYPE_STRING) {
-						output += "\"" + row.getValue(collumnName) + "\";";
-					} else {
-						output += row.getValue(collumnName) + ";";
-					}
+					output += collumnName + ";";
 				}
 				output += "\n";
+				for (int i = 0; i < this.rowsCount(); i++) {
+					row = this.getRow(i);
+					for (String collumnName : columnsTypes.keySet()) {
+						if (columnsTypes.get(collumnName) == DataTable.TYPE_STRING) {
+							output += "\"" + row.getValue(collumnName) + "\";";
+						} else {
+							output += row.getValue(collumnName) + ";";
+						}
+					}
+					output += "\n";
+				}
+		   if (format == DataTable.FORMAT_HTML){
+		            output = "<table>\n";
+		            output += "<tr>";
+		            for (String collumnName : columnsTypes.keySet()) {
+		                output += "<td>" + collumnName + "</td>";
+		            }
+		            output += "</tr>";
+		            output += "\n";
+		            for (int i = 0; i < this.rowsCount(); i++) {
+		                row = this.getRow(i);
+		                output += "<tr>";
+		                for (String collumnName : columnsTypes.keySet()) {
+		                    if (columnsTypes.get(collumnName) == DataTable.TYPE_STRING) {
+		                        output += "<td>" + row.getValue(collumnName) + "</td>";
+		                    } else {
+		                        output += "<td>" + row.getValue(collumnName) + "</td>";
+		                    }
+		                }
+		                output += "</tr>";
+		                output += "\n";
+		                
+		            }
+		            output += "</table>\n";
+					}
+				}
+			return output;
 			}
-		}
-		return output;
-	}
-	
+
 	public void insertRowAt(DataTableRow row, int index) {
 		rows.add(index, row);
 	}
@@ -103,4 +127,5 @@ public class DataTable {
 	public DataTable sortAscending(String collumn) {
 		return null;
 	}
+	
 }
